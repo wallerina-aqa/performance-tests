@@ -5,6 +5,100 @@ from httpx import Response, QueryParams
 from clients.http.client import HTTPClient
 
 
+class GetOperationsQueryDict(TypedDict):
+    """
+    Структура данных для получения списка операций счета.
+    """
+
+    accountId: str
+
+
+class GetOperationsSummaryQueryDict(TypedDict):
+    """
+    Структура данных для получения статистики по операциям счета.
+    """
+
+    accountId: str
+
+
+class MakeFeeOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции комиссии.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
+class MakeTopUpOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции пополнения.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
+class MakeCashbackOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции кэшбэка.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
+class MakeTransferOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции перевода.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
+class MakePurchaseOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции покупки.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+    category: str
+
+
+class MakeBillPaymentOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции оплаты по счету.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
+class MakeCashWithdrawalOperationRequestDict(TypedDict):
+    """
+    Структура данных для создания операции снятия наличных денег.
+    """
+
+    status: str
+    amount: int
+    cardId: str
+    accountId: str
+
+
 class OperationsGatewayHTTPClient(HTTPClient):
     """
     Клиент для взаимодействия с /api/v1/operations сервиса http-gateway.
@@ -13,90 +107,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
     def __init__(self, client):
         super().__init__(client)
         self.operations_api = "/api/v1/operations"
-
-    class GetOperationsQueryDict(TypedDict):
-        """
-        Структура данных для получения списка операций счета.
-        """
-
-        accountId: str
-
-    class GetOperationsSummaryQueryDict(TypedDict):
-        """
-        Структура данных для получения статистики по операциям счета.
-        """
-
-        accountId: str
-
-    class MakeFeeOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции комиссии.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakeTopUpOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции пополнения.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakeCashbackOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции кэшбэка.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakeTransferOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции перевода.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakePurchaseOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции покупки.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakeBillPaymentOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции оплаты по счету.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
-
-    class MakeCashWithdrawalOperationRequestDict(TypedDict):
-        """
-        Структура данных для создания операции снятия наличных денег.
-        """
-
-        status: str
-        amount: int
-        cardId: str
-        accountId: str
 
     def get_operations_api(self, query: GetOperationsQueryDict) -> Response:
         """
