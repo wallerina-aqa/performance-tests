@@ -1,6 +1,7 @@
 from httpx import Response
 
 from clients.http.client import HTTPClient
+from clients.http.gateway.client import build_gateway_http_client
 
 
 class DocumentGatewayHTTPClient(HTTPClient):
@@ -25,3 +26,12 @@ class DocumentGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response).
         """
         return self.get(f"/api/v1/documents/contract-document/{account_id}")
+
+
+def build_documents_http_client() -> DocumentGatewayHTTPClient:
+    """
+    Функция создаёт экземпляр DocumentsGatewayHTTPClient с уже настроенным HTTP-клиентом.
+
+    :return: Готовый к использованию DocumentsGatewayHTTPClient.
+    """
+    return DocumentGatewayHTTPClient(client=build_gateway_http_client())
