@@ -10,7 +10,7 @@ class DocumentDict(TypedDict):
     """Описание структуры документа"""
 
     url: str
-    document: bytes
+    document: str
 
 
 class GetTariffDocumentResponseDict(TypedDict):

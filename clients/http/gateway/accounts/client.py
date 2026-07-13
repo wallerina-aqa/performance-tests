@@ -16,7 +16,7 @@ class AccountDict(TypedDict):
     type: str
     cards: list[CardDict]
     status: str
-    balance: int | float
+    balance: float
 
 
 class GetAccountsQueryDict(TypedDict):
