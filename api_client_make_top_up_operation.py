@@ -1,5 +1,3 @@
-import json
-
 from clients.http.gateway.accounts.client import build_accounts_http_client
 from clients.http.gateway.operations.client import build_operations_http_client
 from clients.http.gateway.users.client import build_users_http_client
@@ -30,5 +28,5 @@ make_top_up_operation_response = operations_gateway_client.make_top_up_operation
 )
 print(
     "Make top up operation response: ",
-    json.dumps(make_top_up_operation_response, indent=2),
+    make_top_up_operation_response.model_dump_json(indent=2, by_alias=True),
 )
