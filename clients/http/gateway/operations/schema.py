@@ -4,6 +4,8 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, HttpUrl, Field
 from pydantic.alias_generators import to_camel
 
+from tools.fakers import fake
+
 
 class GetOperationsQuerySchema(BaseModel):
     """
@@ -128,8 +130,8 @@ class MakeFeeOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 
@@ -153,8 +155,8 @@ class MakeTopUpOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 
@@ -178,8 +180,8 @@ class MakeCashbackOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 
@@ -203,8 +205,8 @@ class MakeTransferOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 
@@ -228,11 +230,11 @@ class MakePurchaseOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
-    category: str
+    category: str = Field(default_factory=fake.category)
 
 
 class MakePurchaseOperationResponseSchema(BaseModel):
@@ -254,8 +256,8 @@ class MakeBillPaymentOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 
@@ -279,8 +281,8 @@ class MakeCashWithdrawalOperationRequestSchema(BaseModel):
         validate_by_alias=True,
     )
 
-    status: OperationStatus
-    amount: float
+    status: OperationStatus = Field(default_factory=lambda: fake.enum(OperationStatus))
+    amount: float = Field(default_factory=fake.amount)
     card_id: str
     account_id: str
 

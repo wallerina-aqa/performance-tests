@@ -48,10 +48,14 @@ class Fake:
 
         return self.faker.random_element(
             # fmt: off
-            ["gas", "taxi", "tolls", "water", "beauty", "mobile",
-             "travel", "parking", "catalog", "internet", "satellite",
-             "education", "government", "healthcare", "restaurants",
-             "electricity", "supermarkets"
+            [
+                "alcohol", "air_tickets", "beauty", "books", "cafes", "cinema",
+                "clothing", "education", "electricity", "electronics", "fast_food",
+                "flowers", "gaming", "gas_stations", "government_services", "groceries",
+                "healthcare", "home_goods", "hotels", "internet", "insurance",
+                "marketplace", "mobile", "parking", "pets", "pharmacies",
+                "public_transport", "restaurants", "subscriptions", "sports",
+                "supermarket", "taxi", "tolls", "travel", "utilities", "water"
             ]
         )
         # fmt: on
@@ -110,7 +114,7 @@ class Fake:
         :return: Сумма от 1 до 1000.
         """
 
-        return self.random_float(end=1000)
+        return self.random_float(end=50000)
 
 
 fake = Fake(faker=Faker())
