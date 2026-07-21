@@ -18,8 +18,8 @@ create_user_request = CreateUserRequest(
     phone_number=fake.phone_number(),
 )
 create_user_response = users_gateway_service.CreateUser(create_user_request)
-print("Create user response: ", create_user_response)
+print("Create user response:", create_user_response)
 
 get_user_request = GetUserRequest(id=create_user_response.user.id)
 get_user_response = users_gateway_service.GetUser(get_user_request)
-print("Get user response: ", get_user_response)
+print("Get user response:", get_user_response)
