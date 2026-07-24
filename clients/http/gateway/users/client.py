@@ -1,4 +1,3 @@
-from faker import Faker
 from httpx import Response
 
 from clients.http.client import HTTPClient
@@ -45,7 +44,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         return CreateUserResponseSchema.model_validate_json(response.text)
 
 
-def build_users_http_client() -> UsersGatewayHTTPClient:
+def build_users_grpc_client() -> UsersGatewayHTTPClient:
     """
     Функция создаёт экземпляр UsersGatewayHTTPClient с уже настроенным HTTP-клиентом.
 
