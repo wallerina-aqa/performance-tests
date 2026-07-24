@@ -1,3 +1,5 @@
+from grpc import Channel
+
 from clients.grpc.client import GRPCClient
 from clients.grpc.gateway.client import build_gateway_grpc_client
 from contracts.services.gateway.cards.cards_gateway_service_pb2_grpc import (
@@ -19,7 +21,7 @@ class CardsGatewayGRPCClient(GRPCClient):
     Предоставляет высокоуровневые методы для получения и создания карт.
     """
 
-    def __init__(self, channel):
+    def __init__(self, channel: Channel):
         """
         Инициализация клиента с указанным gRPC-каналом.
 
