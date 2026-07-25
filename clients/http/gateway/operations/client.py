@@ -17,13 +17,12 @@ from clients.http.gateway.operations.schema import (
     GetOperationReceiptResponseSchema,
     GetOperationResponseSchema,
     MakeFeeOperationResponseSchema,
-    OperationStatus,
     MakeTopUpOperationResponseSchema,
     MakeCashbackOperationResponseSchema,
-    MakeTransferOperationResponseSchema,
     MakePurchaseOperationResponseSchema,
     MakeBillPaymentOperationResponseSchema,
     MakeCashWithdrawalOperationResponseSchema,
+    MakeTransferOperationResponseSchema,
 )
 
 
@@ -35,6 +34,26 @@ class OperationsGatewayHTTPClient(HTTPClient):
     def __init__(self, client):
         super().__init__(client)
         self.operations_api = "/api/v1/operations"
+
+    def get_operation_api(self, operation_id: str) -> Response:
+        """
+        Получение информации по операции.
+
+        :param operation_id: Идентификатор операции.
+        :return: Ответ от сервера (объект httpx.Response).
+        """
+
+        return self.get(f"{self.operations_api}/{operation_id}")
+
+    def get_operation_receipt_api(self, operation_id: str) -> Response:
+        """
+        Получение чека по операции.
+
+        :param operation_id: Идентификатор операции.
+        :return: Ответ от сервера (объект httpx.Response).
+        """
+
+        return self.get(f"{self.operations_api}/operation-receipt/{operation_id}")
 
     def get_operations_api(self, query: GetOperationsQuerySchema) -> Response:
         """
@@ -62,26 +81,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
             f"{self.operations_api}/operations-summary",
             params=QueryParams(**query.model_dump(by_alias=True)),
         )
-
-    def get_operation_receipt_api(self, operation_id: str) -> Response:
-        """
-        Получение чека по операции.
-
-        :param operation_id: Идентификатор операции.
-        :return: Ответ от сервера (объект httpx.Response).
-        """
-
-        return self.get(f"{self.operations_api}/operation-receipt/{operation_id}")
-
-    def get_operation_api(self, operation_id: str) -> Response:
-        """
-        Получение информации по операции.
-
-        :param operation_id: Идентификатор операции.
-        :return: Ответ от сервера (объект httpx.Response).
-        """
-
-        return self.get(f"{self.operations_api}/{operation_id}")
 
     def make_fee_operation_api(
         self, request: MakeFeeOperationRequestSchema
@@ -117,9 +116,9 @@ class OperationsGatewayHTTPClient(HTTPClient):
         self, request: MakeCashbackOperationRequestSchema
     ) -> Response:
         """
-        Выполняет POST-запрос для создания операции кэшбэка.
+        Выполняет POST-запрос для создания операции кешбэка.
 
-        :param request: Словарь с данными операции кэшбэка.
+        :param request: Словарь с данными операции кешбэка.
         :return: Объект httpx.Response с результатом операции.
         """
 
@@ -188,6 +187,14 @@ class OperationsGatewayHTTPClient(HTTPClient):
             json=request.model_dump(by_alias=True),
         )
 
+    def get_operation(self, operation_id) -> GetOperationResponseSchema:
+        response = self.get_operation_api(operation_id=operation_id)
+        return GetOperationResponseSchema.model_validate_json(response.text)
+
+    def get_operation_receipt(self, operation_id) -> GetOperationReceiptResponseSchema:
+        response = self.get_operation_receipt_api(operation_id=operation_id)
+        return GetOperationReceiptResponseSchema.model_validate_json(response.text)
+
     def get_operations(self, account_id) -> GetOperationsResponseSchema:
         query = GetOperationsQuerySchema(account_id=account_id)
         response = self.get_operations_api(query=query)
@@ -197,14 +204,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
         query = GetOperationsSummaryQuerySchema(account_id=account_id)
         response = self.get_operations_summary_api(query=query)
         return GetOperationsSummaryResponseSchema.model_validate_json(response.text)
-
-    def get_operation_receipt(self, operation_id) -> GetOperationReceiptResponseSchema:
-        response = self.get_operation_receipt_api(operation_id=operation_id)
-        return GetOperationReceiptResponseSchema.model_validate_json(response.text)
-
-    def get_operation(self, operation_id) -> GetOperationResponseSchema:
-        response = self.get_operation_api(operation_id=operation_id)
-        return GetOperationResponseSchema.model_validate_json(response.text)
 
     def make_fee_operation(
         self, card_id: str, account_id: str
