@@ -118,7 +118,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         return OpenCreditCardAccountResponseSchema.model_validate_json(response.text)
 
 
-def build_accounts_http_client() -> AccountsGatewayHTTPClient:
+def build_accounts_gateway_http_client() -> AccountsGatewayHTTPClient:
     """
     Функция создаёт экземпляр AccountsGatewayHTTPClient с уже настроенным HTTP-клиентом.
 

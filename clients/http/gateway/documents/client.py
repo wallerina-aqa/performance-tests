@@ -42,7 +42,7 @@ class DocumentGatewayHTTPClient(HTTPClient):
         return GetContractDocumentResponseSchema.model_validate_json(response.text)
 
 
-def build_documents_http_client() -> DocumentGatewayHTTPClient:
+def build_documents_gateway_http_client() -> DocumentGatewayHTTPClient:
     """
     Функция создаёт экземпляр DocumentsGatewayHTTPClient с уже настроенным HTTP-клиентом.
 

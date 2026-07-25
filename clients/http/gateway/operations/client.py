@@ -269,7 +269,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         )
 
 
-def build_operations_http_client() -> OperationsGatewayHTTPClient:
+def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
     """
     Функция создаёт экземпляр OperationsGatewayHTTPClient
     с уже настроенным HTTP-клиентом.

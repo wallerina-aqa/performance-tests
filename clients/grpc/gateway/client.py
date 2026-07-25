@@ -9,4 +9,4 @@ def build_gateway_grpc_client() -> Channel:
     :return: gRPC-канал (Channel), настроенный на адрес localhost:9003.
     """
 
-    return grpc.insecure_channel("http://localhost:9003")
+    return grpc.insecure_channel("localhost:9003")

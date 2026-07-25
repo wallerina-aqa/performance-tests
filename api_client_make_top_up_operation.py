@@ -1,10 +1,10 @@
-from clients.http.gateway.accounts.client import build_accounts_http_client
-from clients.http.gateway.operations.client import build_operations_http_client
-from clients.http.gateway.users.client import build_users_http_client
+from clients.http.gateway.accounts.client import build_accounts_gateway_http_client
+from clients.http.gateway.operations.client import build_operations_gateway_http_client
+from clients.http.gateway.users.client import build_users_gateway_http_client
 
-users_gateway_client = build_users_http_client()
-accounts_gateway_client = build_accounts_http_client()
-operations_gateway_client = build_operations_http_client()
+users_gateway_client = build_users_gateway_http_client()
+accounts_gateway_client = build_accounts_gateway_http_client()
+operations_gateway_client = build_operations_gateway_http_client()
 
 create_user_response = users_gateway_client.create_user()
 print(
