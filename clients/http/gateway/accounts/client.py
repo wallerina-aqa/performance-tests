@@ -1,6 +1,7 @@
 from httpx import Response, QueryParams
+from locust.env import Environment
 
-from clients.http.client import HTTPClient
+from clients.http.client import HTTPClient, HTTPClientExtensions
 from clients.http.gateway.accounts.schema import (
     GetAccountsQuerySchema,
     OpenDepositAccountRequestSchema,
@@ -13,13 +14,20 @@ from clients.http.gateway.accounts.schema import (
     OpenDebitCardAccountResponseSchema,
     OpenCreditCardAccountResponseSchema,
 )
-from clients.http.gateway.client import build_gateway_http_client
+from clients.http.gateway.client import (
+    build_gateway_http_client,
+    build_gateway_locust_http_client,
+)
 
 
 class AccountsGatewayHTTPClient(HTTPClient):
     """
     Клиент для взаимодействия с /api/v1/accounts сервиса http-gateway.
     """
+
+    def __init__(self, client):
+        super().__init__(client)
+        self.accounts_api = "/api/v1/accounts"
 
     def get_accounts_api(self, query: GetAccountsQuerySchema) -> Response:
         """
@@ -29,7 +37,9 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response с данными о счетах.
         """
         return self.get(
-            "/api/v1/accounts", params=QueryParams(**query.model_dump(by_alias=True))
+            self.accounts_api,
+            params=QueryParams(**query.model_dump(by_alias=True)),
+            extensions=HTTPClientExtensions(route=self.accounts_api),
         )
 
     def open_deposit_account_api(
@@ -42,7 +52,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response с результатом операции.
         """
         return self.post(
-            "/api/v1/accounts/open-deposit-account",
+            f"{self.accounts_api}/open-deposit-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -56,7 +66,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            "/api/v1/accounts/open-savings-account",
+            f"{self.accounts_api}/open-savings-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -70,7 +80,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            "/api/v1/accounts/open-debit-card-account",
+            f"{self.accounts_api}/open-debit-card-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -84,7 +94,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            "/api/v1/accounts/open-credit-card-account",
+            f"{self.accounts_api}/open-credit-card-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -125,3 +135,20 @@ def build_accounts_gateway_http_client() -> AccountsGatewayHTTPClient:
     :return: Готовый к использованию AccountsGatewayHTTPClient.
     """
     return AccountsGatewayHTTPClient(client=build_gateway_http_client())
+
+
+def build_accounts_gateway_locust_http_client(
+    environment: Environment,
+) -> AccountsGatewayHTTPClient:
+    """
+    Функция создаёт экземпляр AccountsGatewayHTTPClient, адаптированного под Locust.
+
+    Клиент автоматически собирает метрики и передаёт их в Locust через хуки.
+    Используется исключительно в нагрузочных тестах.
+
+    :param environment: Объект окружения Locust.
+    :return: экземпляр AccountsGatewayHTTPClient с хуками сбора метрик.
+    """
+    return AccountsGatewayHTTPClient(
+        client=build_gateway_locust_http_client(environment)
+    )
