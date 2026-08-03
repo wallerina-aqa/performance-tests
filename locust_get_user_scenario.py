@@ -11,6 +11,7 @@ from pydantic_create_user import CreateUserResponseSchema
 class GetUserScenarioUser(User):
     host = "localhost"
     wait_time = between(1, 3)
+
     users_gateway_client: UsersGatewayHTTPClient
     create_user_response: CreateUserResponseSchema
 
