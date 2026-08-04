@@ -2,6 +2,7 @@ import time
 
 from faker import Faker
 from faker.providers.python import TEnum
+# noinspection PyUnresolvedReferences
 from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
 
 
