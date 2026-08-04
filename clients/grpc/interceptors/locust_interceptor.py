@@ -14,8 +14,6 @@ class LocustInterceptor(UnaryUnaryClientInterceptor):
         """
         :param environment: Экземпляр среды Locust, содержащий события сбора метрик.
         """
-
-        super().__init__(environment)
         self.environment = environment
 
     def intercept_unary_unary(self, continuation, client_call_details, request):
