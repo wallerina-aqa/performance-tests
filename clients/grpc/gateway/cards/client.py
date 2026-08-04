@@ -99,7 +99,7 @@ def build_cards_gateway_locust_grpc_client(
     environment: Environment,
 ) -> CardsGatewayGRPCClient:
     """
-    Функция создаёт экземпляр CardsGatewayGRPCClient адаптированного под Locust.
+    Функция создаёт экземпляр CardsGatewayGRPCClient, адаптированного под Locust.
 
     Клиент автоматически собирает метрики и передаёт их в Locust через хуки.
     Используется исключительно в нагрузочных тестах.

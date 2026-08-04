@@ -128,7 +128,7 @@ def build_accounts_gateway_locust_grpc_client(
     environment: Environment,
 ) -> AccountsGatewayGRPCClient:
     """
-    Функция создаёт экземпляр AccountsGatewayGRPCClient адаптированного под Locust.
+    Функция создаёт экземпляр AccountsGatewayGRPCClient, адаптированного под Locust.
 
     Клиент автоматически собирает метрики и передаёт их в Locust через хуки.
     Используется исключительно в нагрузочных тестах.

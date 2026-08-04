@@ -97,7 +97,7 @@ def build_users_gateway_locust_grpc_client(
     environment: Environment,
 ) -> UsersGatewayGRPCClient:
     """
-    Функция создаёт экземпляр UsersGatewayGRPCClient адаптированного под Locust.
+    Функция создаёт экземпляр UsersGatewayGRPCClient, адаптированного под Locust.
 
     Клиент автоматически собирает метрики и передаёт их в Locust через хуки.
     Используется исключительно в нагрузочных тестах.
