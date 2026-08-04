@@ -1,7 +1,11 @@
 from grpc import Channel
+from locust.env import Environment
 
 from clients.grpc.client import GRPCClient
-from clients.grpc.gateway.client import build_gateway_grpc_client
+from clients.grpc.gateway.client import (
+    build_gateway_grpc_client,
+    build_gateway_locust_grpc_client,
+)
 from contracts.services.gateway.accounts.accounts_gateway_service_pb2_grpc import (
     AccountsGatewayServiceStub,
 )
@@ -110,6 +114,7 @@ class AccountsGatewayGRPCClient(GRPCClient):
         request = OpenCreditCardAccountRequest(user_id=user_id)
         return self.open_credit_card_account_api(request)
 
+
 def build_accounts_gateway_grpc_client() -> AccountsGatewayGRPCClient:
     """
     Фабрика для создания экземпляра AccountsGatewayGRPCClient.
@@ -117,3 +122,20 @@ def build_accounts_gateway_grpc_client() -> AccountsGatewayGRPCClient:
     :return: Инициализированный клиент для AccountsGatewayService.
     """
     return AccountsGatewayGRPCClient(channel=build_gateway_grpc_client())
+
+
+def build_accounts_gateway_locust_grpc_client(
+    environment: Environment,
+) -> AccountsGatewayGRPCClient:
+    """
+    Функция создаёт экземпляр AccountsGatewayGRPCClient адаптированного под Locust.
+
+    Клиент автоматически собирает метрики и передаёт их в Locust через хуки.
+    Используется исключительно в нагрузочных тестах.
+
+    :param environment: Объект окружения Locust.
+    :return: экземпляр AccountsGatewayGRPCClient с хуками сбора метрик.
+    """
+    return AccountsGatewayGRPCClient(
+        channel=build_gateway_locust_grpc_client(environment)
+    )

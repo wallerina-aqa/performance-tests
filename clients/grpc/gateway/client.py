@@ -1,5 +1,8 @@
 import grpc
-from grpc import Channel
+from grpc import Channel, intercept_channel
+from locust.env import Environment
+
+from clients.grpc.interceptors.locust_interceptor import LocustInterceptor
 
 
 def build_gateway_grpc_client() -> Channel:
@@ -10,3 +13,18 @@ def build_gateway_grpc_client() -> Channel:
     """
 
     return grpc.insecure_channel("localhost:9003")
+
+
+def build_gateway_locust_grpc_client(environment: Environment) -> Channel:
+    """
+    Фабричная функция для создания gRPC-канала, адаптированного для Locust.
+    В канал автоматически встраивается интерцептор LocustInterceptor,
+    который регистрирует вызовы в системе метрик Locust.
+
+    :param environment: Среда выполнения Locust (необходима для отправки событий).
+    :return: gRPC-канал с интерцептором, пригодный для нагрузочного тестирования.
+    """
+    locust_interceptor = LocustInterceptor(environment)
+    channel = grpc.insecure_channel("localhost:9003")
+
+    return intercept_channel(channel, locust_interceptor)

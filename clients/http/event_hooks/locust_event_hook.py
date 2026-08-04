@@ -12,7 +12,7 @@ def locust_request_event_hook(request: Request) -> None:
     чтобы потом использовать его для расчёта времени ответа.
     """
 
-    request.extensions["start_time"] = time.time()
+    request.extensions["start_time"] = time.perf_counter()
 
 
 def locust_response_event_hook(environment: Environment):
@@ -21,7 +21,8 @@ def locust_response_event_hook(environment: Environment):
 
     Использует `request.extensions["start_time"]` для вычисления времени отклика.
     Извлекает route из `request.extensions["route"]`, если задан.
-    Отправляет собранные метрики в `environment.events.request`, чтобы Locust мог агрегировать статистику.
+    Отправляет собранные метрики в `environment.events.request`,
+                                         чтобы Locust мог агрегировать статистику.
 
     :param environment: Объект окружения Locust, через который отправляются метрики.
     :return: Функция-хук для HTTPX response event hook.
@@ -36,9 +37,12 @@ def locust_response_event_hook(environment: Environment):
 
         request = response.request
         route = request.extensions.get("route", request.url.path)
-        start_time = request.extensions.get("start_time", time.time())
-        response_time = (time.time() - start_time) * 1000
+        start_time = request.extensions.get("start_time", time.perf_counter())
+        response_time = (time.perf_counter() - start_time) * 1000
         response_length = len(response.read())
+
+        if environment.events is None:
+            raise RuntimeError("Locust events are not initialized")
 
         environment.events.request.fire(
             name=f"{request.method} {route}",
