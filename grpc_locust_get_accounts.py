@@ -21,7 +21,7 @@ class GetAccountsTaskSet(GatewayGRPCTaskSet):
     create_user_response: CreateUserResponse | None = None
     open_deposit_account_response: OpenDepositAccountResponse | None = None
     get_accounts_response: GetAccountsResponse | None = None
-    user_id: str
+    user_id: str | None = None
 
     @task(2)
     def create_user(self):
@@ -30,6 +30,8 @@ class GetAccountsTaskSet(GatewayGRPCTaskSet):
         """
 
         self.create_user_response = self.users_gateway_client.create_user()
+        if self.create_user_response is not None:
+            self.user_id = self.create_user_response.user.id
 
     @task(2)
     def open_deposit_account(self):
@@ -38,10 +40,9 @@ class GetAccountsTaskSet(GatewayGRPCTaskSet):
         Проверяем, что предыдущий шаг был успешным.
         """
 
-        if not self.create_user_response:
+        if self.user_id is None:
             return
 
-        self.user_id = self.create_user_response.user.id
         self.open_deposit_account_response = (
             self.accounts_gateway_client.open_deposit_account(user_id=self.user_id)
         )
@@ -52,7 +53,7 @@ class GetAccountsTaskSet(GatewayGRPCTaskSet):
         Получаем счета, если счёт был успешно открыт.
         """
 
-        if not self.open_deposit_account_response:
+        if self.user_id is None:
             return
 
         self.accounts_gateway_client.get_accounts(user_id=self.user_id)
