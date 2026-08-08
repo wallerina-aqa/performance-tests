@@ -1,9 +1,11 @@
-from locust import task, User, between
+from locust import task
 
 from clients.grpc.gateway.locust import GatewayGRPCSequentialTaskSet
-from contracts.services.gateway.accounts.rpc_open_savings_account_pb2 import \
-    OpenSavingsAccountResponse
+from contracts.services.gateway.accounts.rpc_open_savings_account_pb2 import (
+    OpenSavingsAccountResponse,
+)
 from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
+from tools.locust.user import LocustBaseUser
 
 
 class GetDocumentsSequentialTaskSet(GatewayGRPCSequentialTaskSet):
@@ -12,10 +14,19 @@ class GetDocumentsSequentialTaskSet(GatewayGRPCSequentialTaskSet):
 
     @task
     def create_user(self):
+        """
+        Создаём нового пользователя и сохраняем результат для последующих шагов.
+        """
+
         self.create_user_response = self.users_gateway_client.create_user()
 
     @task
     def open_savings_account(self):
+        """
+        Открываем сберегательный счёт для созданного пользователя.
+        Проверяем, что предыдущий шаг был успешным.
+        """
+
         if not self.create_user_response:
             return
 
@@ -26,6 +37,10 @@ class GetDocumentsSequentialTaskSet(GatewayGRPCSequentialTaskSet):
 
     @task
     def get_documents(self):
+        """
+        Получаем документы, если счёт был успешно открыт.
+        """
+
         if not self.open_savings_account_response:
             return
 
@@ -34,7 +49,9 @@ class GetDocumentsSequentialTaskSet(GatewayGRPCSequentialTaskSet):
         self.documents_gateway_client.get_contract_document(account_id=account_id)
 
 
-class GetDocumentsUser(User):
+class GetDocumentsUser(LocustBaseUser):
+    """
+    Пользователь Locust, исполняющий последовательный сценарий получения документов.
+    """
+
     tasks = [GetDocumentsSequentialTaskSet]
-    host = "localhost"
-    wait_time = between(1, 3)

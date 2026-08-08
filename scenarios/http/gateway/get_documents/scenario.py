@@ -1,8 +1,9 @@
-from locust import task, User, between
+from locust import task
 
 from clients.http.gateway.accounts.schema import OpenSavingsAccountResponseSchema
 from clients.http.gateway.locust import GatewayHttpSequentialTaskSet
 from clients.http.gateway.users.schema import CreateUserResponseSchema
+from tools.locust.user import LocustBaseUser
 
 
 class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
@@ -23,7 +24,6 @@ class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
         """
         Создаём нового пользователя и сохраняем результат для последующих шагов.
         """
-
         self.create_user_response = self.users_gateway_client.create_user()
 
     @task
@@ -32,7 +32,6 @@ class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
         Открываем сберегательный счёт для созданного пользователя.
         Проверяем, что предыдущий шаг был успешным.
         """
-
         if not self.create_user_response:
             return
 
@@ -46,7 +45,6 @@ class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
         """
         Получаем документы, если счёт был успешно открыт.
         """
-
         if not self.open_savings_account_response:
             return
 
@@ -55,11 +53,9 @@ class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
         self.documents_gateway_client.get_contract_document(account_id=account_id)
 
 
-class GetDocumentsUser(User):
+class GetDocumentsUser(LocustBaseUser):
     """
     Пользователь Locust, исполняющий последовательный сценарий получения документов.
     """
 
     tasks = [GetDocumentsSequentialTaskSet]
-    host = "localhost"
-    wait_time = between(1, 3)
