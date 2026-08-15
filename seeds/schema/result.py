@@ -39,8 +39,11 @@ class SeedAccountResult(BaseModel):
 
     account_id: str
     physical_cards: list[SeedCardResult] = Field(default_factory=list)
+    virtual_cards: list[SeedCardResult] = Field(default_factory=list)
     top_up_operations: list[SeedOperationResult] = Field(default_factory=list)
     purchase_operations: list[SeedOperationResult] = Field(default_factory=list)
+    transfer_operations: list[SeedOperationResult] = Field(default_factory=list)
+    cash_withdrawal_operations: list[SeedOperationResult] = Field(default_factory=list)
 
 
 class SeedUserResult(BaseModel):
