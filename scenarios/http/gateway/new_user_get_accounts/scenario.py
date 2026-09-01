@@ -60,7 +60,7 @@ class GetAccountsTaskSet(GatewayHttpTaskSet):
         self.accounts_gateway_client.get_accounts(user_id=self.user_id)
 
 
-class GetAccountsUser(LocustBaseUser):
+class GetAccountsScenarioUser(LocustBaseUser):
     """
     Пользователь Locust, исполняющий сценарий получения счетов пользователя.
     """

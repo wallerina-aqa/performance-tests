@@ -1,18 +1,22 @@
 from locust import task
 
-from clients.http.gateway.accounts.schema import OpenDebitCardAccountResponseSchema
-from clients.http.gateway.locust import GatewayHttpSequentialTaskSet
-from clients.http.gateway.operations.schema import MakeTopUpOperationResponseSchema
-from clients.http.gateway.users.schema import CreateUserResponseSchema
+from clients.grpc.gateway.locust import GatewayGRPCSequentialTaskSet
+from contracts.services.gateway.accounts.rpc_open_debit_card_account_pb2 import (
+    OpenDebitCardAccountResponse,
+)
+from contracts.services.gateway.operations.rpc_make_top_up_operation_pb2 import (
+    MakeTopUpOperationResponse,
+)
+from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
 from tools.locust.user import LocustBaseUser
 
 
-class MakeTopUpOperationSequentialTaskSet(GatewayHttpSequentialTaskSet):
-    create_user_response: CreateUserResponseSchema | None = None
-    open_debit_card_account_response: OpenDebitCardAccountResponseSchema | None = None
+class MakeTopUpOperationSequentialTaskSet(GatewayGRPCSequentialTaskSet):
+    create_user_response: CreateUserResponse | None = None
+    open_debit_card_account_response: OpenDebitCardAccountResponse | None = None
     account_id: str | None = None
 
-    make_top_up_operation_response: MakeTopUpOperationResponseSchema | None = None
+    make_top_up_operation_response: MakeTopUpOperationResponse | None = None
     operation_id: str | None = None
 
     @task

@@ -53,7 +53,7 @@ class GetDocumentsSequentialTaskSet(GatewayHttpSequentialTaskSet):
         self.documents_gateway_client.get_contract_document(account_id=account_id)
 
 
-class GetDocumentsUser(LocustBaseUser):
+class GetDocumentsScenarioUser(LocustBaseUser):
     """
     Пользователь Locust, исполняющий последовательный сценарий получения документов.
     """

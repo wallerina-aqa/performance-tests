@@ -1,18 +1,18 @@
 from locust import task
 
-from clients.http.gateway.accounts.schema import (
-    OpenDebitCardAccountResponseSchema,
+from clients.grpc.gateway.locust import GatewayGRPCSequentialTaskSet
+from contracts.services.gateway.accounts.rpc_open_debit_card_account_pb2 import (
+    OpenDebitCardAccountResponse,
 )
-from clients.http.gateway.locust import GatewayHttpSequentialTaskSet
-from clients.http.gateway.users.schema import CreateUserResponseSchema
+from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
 from tools.locust.user import LocustBaseUser
 
 
-class IssuePhysicalCardSequentialTaskSet(GatewayHttpSequentialTaskSet):
-    create_user_response: CreateUserResponseSchema | None = None
+class IssuePhysicalCardSequentialTaskSet(GatewayGRPCSequentialTaskSet):
+    create_user_response: CreateUserResponse | None = None
     user_id: str | None = None
 
-    open_debit_card_account_response: OpenDebitCardAccountResponseSchema | None = None
+    open_debit_card_account_response: OpenDebitCardAccountResponse | None = None
     account_id: str | None = None
 
     @task
@@ -48,5 +48,5 @@ class IssuePhysicalCardSequentialTaskSet(GatewayHttpSequentialTaskSet):
         )
 
 
-class MakeTopUpOperationScenarioUser(LocustBaseUser):
+class IssuePhysicalCardScenarioUser(LocustBaseUser):
     tasks = [IssuePhysicalCardSequentialTaskSet]
