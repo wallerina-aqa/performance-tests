@@ -35,7 +35,7 @@ class GetDocumentsTaskSet(GatewayHttpTaskSet):
         # Получаем следующего пользователя из списка (по порядку!)
         self.seed_user = self.user.environment.seeds.get_next_user()
 
-    @task(1)
+    @task
     def get_accounts(self):
         # Запрашиваем список счетов
         self.accounts_gateway_client.get_accounts(user_id=self.seed_user.user_id)
