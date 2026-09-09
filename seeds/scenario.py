@@ -4,13 +4,16 @@ from seeds.builder import build_grpc_seeds_builder
 from seeds.dumps import save_seeds_result, load_seeds_result
 from seeds.schema.plan import SeedsPlan
 from seeds.schema.result import SeedsResult
+from tools.logger import get_logger
+
+logger = get_logger("SEEDS_SCENARIO")
 
 
 class SeedsScenario(ABC):
     """
     Абстрактный класс для работы со сценариями сидинга.
-    Этот класс инкапсулирует общую логику генерации, сохранения и загрузки
-                                                                   данных для тестов.
+    Этот класс инкапсулирует общую логику генерации, сохранения
+                                                          и загрузки данных для тестов.
     """
 
     def __init__(self):
@@ -43,19 +46,30 @@ class SeedsScenario(ABC):
         Сохраняет результат сидинга в файл.
         :param result: Объект SeedsResult, содержащий сгенерированные данные.
         """
+        logger.info(f"[{self.scenario}] Saving seeding result to file.")
         save_seeds_result(result=result, scenario=self.scenario)
+        logger.info(f"[{self.scenario}] Seeding result saved successfully.")
 
     def load(self) -> SeedsResult:
         """
         Загружает результаты сидинга из файла.
         :return: Объект SeedsResult, содержащий данные, загруженные из файла.
         """
-        return load_seeds_result(scenario=self.scenario)
+        logger.info(f"[{self.scenario}] Loading seeding result from file.")
+        result = load_seeds_result(scenario=self.scenario)
+        logger.info(f"[{self.scenario}] Seeding result loaded successfully.")
+        return result
 
     def build(self) -> None:
         """
         Генерирует данные с помощью билдера, используя план сидинга,
-                                                              и сохраняет результат.
+                                                                 и сохраняет результат.
         """
+        plan_json = self.plan.model_dump_json(indent=2, exclude_defaults=True)
+        logger.info(
+            f"[{self.scenario}] Starting seeding data generation for plan: {plan_json}"
+        )
+
         result = self.builder.build(self.plan)
+        logger.info(f"[{self.scenario}] Seeding data generation completed.")
         self.save(result)
