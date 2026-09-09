@@ -18,6 +18,7 @@ from clients.http.gateway.client import (
     build_gateway_http_client,
     build_gateway_locust_http_client,
 )
+from tools.routes import APIRoutes
 
 
 class AccountsGatewayHTTPClient(HTTPClient):
@@ -27,7 +28,6 @@ class AccountsGatewayHTTPClient(HTTPClient):
 
     def __init__(self, client):
         super().__init__(client)
-        self.accounts_api = "/api/v1/accounts"
 
     def get_accounts_api(self, query: GetAccountsQuerySchema) -> Response:
         """
@@ -37,9 +37,9 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response с данными о счетах.
         """
         return self.get(
-            self.accounts_api,
+            APIRoutes.ACCOUNTS,
             params=QueryParams(**query.model_dump(by_alias=True)),
-            extensions=HTTPClientExtensions(route=self.accounts_api),
+            extensions=HTTPClientExtensions(route=APIRoutes.ACCOUNTS),
         )
 
     def open_deposit_account_api(
@@ -52,7 +52,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response с результатом операции.
         """
         return self.post(
-            f"{self.accounts_api}/open-deposit-account",
+            f"{APIRoutes.ACCOUNTS}/open-deposit-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -66,7 +66,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            f"{self.accounts_api}/open-savings-account",
+            f"{APIRoutes.ACCOUNTS}/open-savings-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -80,7 +80,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            f"{self.accounts_api}/open-debit-card-account",
+            f"{APIRoutes.ACCOUNTS}/open-debit-card-account",
             json=request.model_dump(by_alias=True),
         )
 
@@ -94,7 +94,7 @@ class AccountsGatewayHTTPClient(HTTPClient):
         :return: Объект httpx.Response.
         """
         return self.post(
-            f"{self.accounts_api}/open-credit-card-account",
+            f"{APIRoutes.ACCOUNTS}/open-credit-card-account",
             json=request.model_dump(by_alias=True),
         )
 

@@ -28,6 +28,7 @@ from clients.http.gateway.operations.schema import (
     MakeCashWithdrawalOperationResponseSchema,
     MakeTransferOperationResponseSchema,
 )
+from tools.routes import APIRoutes
 
 
 class OperationsGatewayHTTPClient(HTTPClient):
@@ -37,7 +38,6 @@ class OperationsGatewayHTTPClient(HTTPClient):
 
     def __init__(self, client):
         super().__init__(client)
-        self.operations_api = "/api/v1/operations"
 
     def get_operation_api(self, operation_id: str) -> Response:
         """
@@ -48,9 +48,9 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.get(
-            f"{self.operations_api}/{operation_id}",
+            f"{APIRoutes.OPERATIONS}/{operation_id}",
             extensions=HTTPClientExtensions(
-                route=self.operations_api + "/{operation_id}"
+                route=APIRoutes.OPERATIONS + "/{operation_id}"
             ),
         )
 
@@ -63,9 +63,9 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.get(
-            f"{self.operations_api}/operation-receipt/{operation_id}",
+            f"{APIRoutes.OPERATIONS}/operation-receipt/{operation_id}",
             extensions=HTTPClientExtensions(
-                route=self.operations_api + "/operation-receipt/{operation_id}"
+                route=APIRoutes.OPERATIONS + "/operation-receipt/{operation_id}"
             ),
         )
 
@@ -78,9 +78,9 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.get(
-            self.operations_api,
+            APIRoutes.OPERATIONS,
             params=QueryParams(**query.model_dump(by_alias=True)),
-            extensions=HTTPClientExtensions(route=self.operations_api),
+            extensions=HTTPClientExtensions(route=APIRoutes.OPERATIONS),
         )
 
     def get_operations_summary_api(
@@ -94,10 +94,10 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.get(
-            f"{self.operations_api}/operations-summary",
+            f"{APIRoutes.OPERATIONS}/operations-summary",
             params=QueryParams(**query.model_dump(by_alias=True)),
             extensions=HTTPClientExtensions(
-                route=self.operations_api + "/operations-summary"
+                route=APIRoutes.OPERATIONS + "/operations-summary"
             ),
         )
 
@@ -112,7 +112,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-fee-operation",
+            f"{APIRoutes.OPERATIONS}/make-fee-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -127,7 +127,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-top-up-operation",
+            f"{APIRoutes.OPERATIONS}/make-top-up-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -142,7 +142,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-cashback-operation",
+            f"{APIRoutes.OPERATIONS}/make-cashback-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -157,7 +157,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-transfer-operation",
+            f"{APIRoutes.OPERATIONS}/make-transfer-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -172,7 +172,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-purchase-operation",
+            f"{APIRoutes.OPERATIONS}/make-purchase-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -187,7 +187,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-bill-payment-operation",
+            f"{APIRoutes.OPERATIONS}/make-bill-payment-operation",
             json=request.model_dump(by_alias=True),
         )
 
@@ -202,7 +202,7 @@ class OperationsGatewayHTTPClient(HTTPClient):
         """
 
         return self.post(
-            f"{self.operations_api}/make-cash-withdrawal-operation",
+            f"{APIRoutes.OPERATIONS}/make-cash-withdrawal-operation",
             json=request.model_dump(by_alias=True),
         )
 

@@ -11,6 +11,7 @@ from clients.http.gateway.users.schema import (
     CreateUserResponseSchema,
     CreateUserRequestSchema,
 )
+from tools.routes import APIRoutes
 
 
 class UsersGatewayHTTPClient(HTTPClient):
@@ -20,7 +21,6 @@ class UsersGatewayHTTPClient(HTTPClient):
 
     def __init__(self, client):
         super().__init__(client)
-        self.users_api = "/api/v1/users"
 
     def get_user_api(self, user_id: str) -> Response:
         """
@@ -31,8 +31,8 @@ class UsersGatewayHTTPClient(HTTPClient):
         """
 
         return self.get(
-            f"{self.users_api}/{user_id}",
-            extensions=HTTPClientExtensions(route=self.users_api + "/{user_id}"),
+            f"{APIRoutes.USERS}/{user_id}",
+            extensions=HTTPClientExtensions(route=f"{APIRoutes.USERS}/{{user_id}}"),
         )
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
@@ -43,7 +43,7 @@ class UsersGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response).
         """
 
-        return self.post(self.users_api, json=request.model_dump(by_alias=True))
+        return self.post(APIRoutes.USERS, json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         response = self.get_user_api(user_id)

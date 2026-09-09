@@ -10,6 +10,7 @@ from clients.http.gateway.documents.schema import (
     GetTariffDocumentResponseSchema,
     GetContractDocumentResponseSchema,
 )
+from tools.routes import APIRoutes
 
 
 class DocumentsGatewayHTTPClient(HTTPClient):
@@ -19,7 +20,6 @@ class DocumentsGatewayHTTPClient(HTTPClient):
 
     def __init__(self, client):
         super().__init__(client)
-        self.documents_api = "/api/v1/documents"
 
     def get_tariff_document_api(self, account_id: str) -> Response:
         """
@@ -29,9 +29,9 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response).
         """
         return self.get(
-            f"{self.documents_api}/tariff-document/{account_id}",
+            f"{APIRoutes.DOCUMENTS}/tariff-document/{account_id}",
             extensions=HTTPClientExtensions(
-                route=self.documents_api + "/tariff-document/{account_id}"
+                route=APIRoutes.DOCUMENTS + "/tariff-document/{account_id}"
             ),
         )
 
@@ -43,9 +43,9 @@ class DocumentsGatewayHTTPClient(HTTPClient):
         :return: Ответ от сервера (объект httpx.Response).
         """
         return self.get(
-            f"{self.documents_api}/contract-document/{account_id}",
+            f"{APIRoutes.DOCUMENTS}/contract-document/{account_id}",
             extensions=HTTPClientExtensions(
-                route=self.documents_api + "/contract-document/{account_id}"
+                route=APIRoutes.DOCUMENTS + "/contract-document/{account_id}"
             ),
         )
 
@@ -62,7 +62,8 @@ class DocumentsGatewayHTTPClient(HTTPClient):
 
 def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
     """
-    Функция создаёт экземпляр DocumentsGatewayHTTPClient с уже настроенным HTTP-клиентом.
+    Функция создаёт экземпляр DocumentsGatewayHTTPClient
+                                                     с уже настроенным HTTP-клиентом.
 
     :return: Готовый к использованию DocumentsGatewayHTTPClient.
     """
