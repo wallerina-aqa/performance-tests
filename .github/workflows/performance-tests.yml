@@ -70,6 +70,13 @@ jobs:
 
       # 8. Запускаем Locust с выбранным конфигурационным файлом и сохраняем HTML-отчёт
       - name: Run load tests and generate HTML report
+        env:
+          LOCUST_USER.WAIT_TIME_MIN: ${{ secrets.LOCUST_USER_WAIT_TIME_MIN }}
+          LOCUST_USER.WAIT_TIME_MAX: ${{ secrets.LOCUST_USER_WAIT_TIME_MAX }}
+          GATEWAY_HTTP_CLIENT.URL: ${{ secrets.GATEWAY_HTTP_CLIENT_URL }}
+          GATEWAY_HTTP_CLIENT.TIMEOUT: ${{ secrets.GATEWAY_HTTP_CLIENT_TIMEOUT }}
+          GATEWAY_GRPC_CLIENT.HOST: ${{ secrets.GATEWAY_GRPC_CLIENT_HOST }}
+          GATEWAY_GRPC_CLIENT.PORT: ${{ secrets.GATEWAY_GRPC_CLIENT_PORT }}
         run: locust --config=${{ github.event.inputs.SCENARIO }} --html=reports/${{ github.run_id }}/index.html
 
       # 9. Деплой HTML-отчёта в GitHub Pages, чтобы можно было посмотреть результаты в браузере
