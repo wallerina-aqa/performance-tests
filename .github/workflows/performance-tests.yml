@@ -79,7 +79,34 @@ jobs:
           GATEWAY_GRPC_CLIENT.PORT: ${{ secrets.GATEWAY_GRPC_CLIENT_PORT }}
         run: locust --config=${{ github.event.inputs.SCENARIO }} --html=reports/${{ github.run_id }}/index.html
 
-      # 9. Деплой HTML-отчёта в GitHub Pages, чтобы можно было посмотреть результаты в браузере
+      # 9. Сохраняем папку с HTML-отчётом как артефакт, чтобы передать ее в джобу publish-report
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: locust-report
+          path: reports
+
+      # 10. Корректно останавливаем docker-контейнеры и удаляем volume-ы (например, temp-файлы)
+      - name: Stop test services
+        if: always()
+        run: docker compose -f docker-compose.ci.yaml down -v
+        working-directory: performance-qa-engineer-course
+
+  publish-report:
+    runs-on: ubuntu-latest
+    needs: run-tests
+    if: always()
+
+    steps:
+      # 1. Загружаем артефакт с HTML-отчётом, созданный в джобе run-tests
+      - name: Download report artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: locust-report
+          path: reports
+
+      # 2. Деплой HTML-отчёта в GitHub Pages, чтобы можно было посмотреть результаты в браузере
       - name: Deploy HTML report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
@@ -88,9 +115,3 @@ jobs:
           keep_files: true  # Сохраняем предыдущие отчёты
           publish_dir: reports  # Публикуем директорию reports
           publish_branch: gh-pages  # На ветке gh-pages
-
-      # 10. Корректно останавливаем docker-контейнеры и удаляем volume-ы (например, temp-файлы)
-      - name: Stop test services
-        if: always()
-        run: docker compose -f docker-compose.ci.yaml down -v
-        working-directory: performance-qa-engineer-course
